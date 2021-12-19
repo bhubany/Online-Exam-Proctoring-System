@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>User verification System</title>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="row-cols-2"></div>
+            <div class="row-cols-8">
+                <div class="row">
+                    <!-- -------Start of Header--------- -->
+                    <div class="myHeader text-center p-2">
+                        <p class="text-white"><a href="../" class="text-decoration-none">ONLINE EXAM PROCTORING SYSTEM</a></p>
+                    </div>
+                    <!-- -------End of Header--------- -->
+
+                    <!-- Start of body -->
+                    <div class="myBody">
+                        <!-- Success Message -->
+                        {% if success_msg %}
+                            <div class="mt-1 alert alert-success">
+                                {{success_msg}}
+                            </div>
+                        {% endif %}
+
+                        <!-- Failure Message -->
+                        {% if failure_msg %}
+                            <div class="mt-1 alert alert-danger">
+                                {{failure_msg}}
+                            </div>
+                        {% endif %}
+                        <div class="">
+                            <form action="register_details" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                <div class="col-md-4 mb-3">
+                                  <label for="firstName">First name</label>
+                                  <input type="text" class="form-control" id="firstName" name="r_first_name" placeholder="First name" value="" required>
+                                  <div class="valid-feedback">
+                                    Looks good!
+                                  </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                  <label for="middleName">Middle name</label>
+                                  <input type="text" class="form-control" id="middleName" name="r_middle_name" placeholder="Middle name" value="">
+                                  <div class="valid-feedback">
+                                    Looks good!
+                                  </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                  <label for="lastName">Last name</label>
+                                  <input type="text" class="form-control" id="lastName" name="r_last_name" placeholder="Last name" value="" required>
+                                  <div class="valid-feedback">
+                                    Looks good!
+                                  </div>
+                                </div>
+                    <!-- Email and Username -->
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                      <label for="email">Email</label>
+                                      <input type="email" class="form-control" id="email" name="r_email" placeholder="Someone@example.com" value="">
+                                      <div class="valid-feedback">
+                                        Looks good!
+                                      </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                      <label for="username">Username</label>
+                                      <input type="text" class="form-control" id="username" name="r_username" placeholder="Username" value="">
+                                      <div class="valid-feedback">
+                                        Looks good!
+                                      </div>
+                                    </div>
+                                </div>
+
+                `<!-- Password -->
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                      <label for="password">Password</label>
+                                      <input type="password" class="form-control" id="password" name="r_pwd" placeholder="Enter Password" value="">
+                                      <div class="valid-feedback">
+                                        Looks good!
+                                      </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                      <label for="conformPassword">Conform Password</label>
+                                      <input type="password" class="form-control" id="conformPassword" name="r_conf_pwd" placeholder="Conform Password" value="">
+                                      <div class="valid-feedback">
+                                        Looks good!
+                                      </div>
+                                    </div>
+                                </div>
+                <!-- Submit Details -->
+                                <div class="p-3" align="center">
+                                    <div class="col-md-4">
+                                      <input type="submit" class="form-control btn btn-primary rounded-1" id="register" value="Register">
+                                      <div class="valid-feedback">
+                                        Looks good!
+                                      </div>
+                                    </div>
+                                </div>
+                              </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- End of Body -->
+
+                    <!--start of footer -->
+                    <div>
+                        
+                    </div>
+                    <!-- End of Footer -->
+
+                </div>
+            </div>
+            <div class="row-cols-2"></div>
+        </div>
+    </div>
+
+
+<!--    Linking Js Code-->
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.js'%}"></script>
+    <script src="{% static 'assets/js/myJs.js'%}"></script>
+</body>
+</html>
