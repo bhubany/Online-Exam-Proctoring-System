@@ -32,7 +32,6 @@
                             <form action="face_verification" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" id="myField" name="user_image" value="" />
-                                <input type="hidden" id="userName" name="user_image" value="" />
                                 <button type="submit" id="snap">Capture</button>
                             </form>
                         </div>
@@ -95,14 +94,11 @@
 
         // Draw image
         var context = canvas.getContext('2d');
-        for (i=0;i<10;i++) {
-            snap.addEventListener("click", function () {
-                context.drawImage(video, 0, 0, 640, 480);
-                var dataURL = canvas.toDataURL();
-
-                document.getElementById('myField').value = dataURL;
-            });
-        }
+		snap.addEventListener("click", function () {
+			context.drawImage(video, 0, 0, 640, 480);
+			var dataURL = canvas.toDataURL();
+			document.getElementById('myField').value = dataURL;
+		});
 
 	</script>
 

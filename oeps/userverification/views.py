@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 import base64
+import time
 
 # Create your views here.
 
@@ -34,11 +35,12 @@ def user_face_verificatio(request):
     img = request.POST['user_image']
     img = img.replace('data:image/png;base64,','')
     img = img.replace(' ','+')
+    seconds=time.time()
     # img=base64.b64decode(img)
-    with open('static/user_image/dataset/decoded_image.png', 'wb') as file_to_save:
+    with open('static/user_image/dataset/decoded_image'+str(seconds)+'.png', 'wb') as file_to_save:
         decoded_image_data = base64.b64decode(img)
         file_to_save.write(decoded_image_data)
-    # print(img)
+    print(img)
     return render(request, 'userverification/face_verification.html')
 
 # Login Form
