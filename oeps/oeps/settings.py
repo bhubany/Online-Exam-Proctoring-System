@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-f_cr#z5!06iz0lfk7xx6br4u0m$44l265@im1y1_=l!0o-&!^$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','192.168.1.101','192.168.1.108','192.168.137.1','192.168.1.116']
 
 
 # Application definition
@@ -76,7 +76,19 @@ WSGI_APPLICATION = 'oeps.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+      'default': {  
+        'ENGINE': 'django.db.backends.mysql',  
+        'NAME': 'oeps_db',  
+        'USER': 'root',  
+        'PASSWORD': '',  
+        'HOST': 'localhost',  
+        'PORT': '3306',
+        'OPTIONS': {  
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
+        }  
+    },
+
+    'sqlite3': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
