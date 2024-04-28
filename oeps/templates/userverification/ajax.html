@@ -1,0 +1,103 @@
+<script>
+// # insert data
+    
+    $("#addUser").click(function (){
+        console.log("Working");
+        // window.alert("Working");
+        output="";
+        var uid =$('#userId').val();
+        var password =$('#password').val();
+        var phone =$('#phone').val();
+        var username =$('#username').val();
+        var email =$('#email').val();
+        var lastName =$('#lastName').val();
+        var middleName =$('#middleName').val();
+        var firstName =$('#firstName').val();
+        var csr = $("input[name=csrfmiddlewaretoken").val();
+        // alert(uid)
+        if (password=='' || phone=="" || username =="" || email =="" ){
+            alert("Empty Value")
+        }else{
+            mydata = {uid:uid, fname:firstName, mname:middleName, lname:lastName, email:email, username:username, phone:phone, password:password, csrfmiddlewaretoken: csr};
+            $.ajax({
+                url: "{% url 'savetest' %}",
+                method: "POST",
+                data: mydata,
+                dataType: "json",
+                success: function(data){
+                    // console.log(data);
+                    if (data.status == "save"){
+                        usr=data.usr_data
+                        console.log("Form Submitted Sucessfully");
+                        // console.log(usr); 
+                        for(i=0; i<usr.length; i++){
+                            output += "<tr><td>"+usr[i].u_id+"</td><td>"+usr[i].u_f_name+"</td><td>"+usr[i].u_m_name
+                                +"</td><td>"+usr[i].u_l_name+"</td><td>"+usr[i].u_username+"</td><td>"+usr[i].u_email
+                                +"<td><input type='button' class='btn btn-warning btn-edit' value='Edit' data-sid="+ usr[i].u_id + "></td><td><input type='button' class='btn btn-danger btn-del' value='Delete' data-sid="+ usr[i].u_id +"</td><td></td> <tr>";
+                        }
+                        $("#tbody").html(output);
+                        $('#userId').val("");
+                        $("form")[0].reset();
+                    }
+                    if (data.status==0){
+                        console.log("Unable to save form");
+                        $('#userId').val("");
+                        $("form")[0].reset();
+                    }
+                }
+            });
+        }
+    });
+
+    // Delete button
+    $("#tbody").on("click", ".btn-del", function(){
+        console.log("Delete Button Clicked");
+        let id =$(this).attr("data-sid");
+        var csr = $("input[name=csrfmiddlewaretoken").val();
+        console.log(id);
+        mydata = {sid:id, csrfmiddlewaretoken:csr};
+        mythis = this;
+        if(confirm("Are you sure you want to proceed?")){
+            $.ajax({
+                url: "{% url 'deleteData' %}",
+                method: "POST",
+                data:mydata,
+                success: function(data){
+                    // console.log(data);
+                    if (data.status == 1){
+                        window.alert("Data Deleted Sucessfully");
+                        console.log("Data Deleted Sucessfully");
+                        $(mythis).closest("tr").fadeOut(); 
+                    }else{
+                        window.alert("Error occurs try again later");
+                    }
+                }
+            });
+        }
+    });
+    
+
+   // Delete button
+   $("#tbody").on("click", ".btn-edit", function(){
+        console.log("Edit Button Clicked");
+        let id =$(this).attr("data-sid");
+        var csr = $("input[name=csrfmiddlewaretoken").val();
+        console.log(id);
+        mydata = {sid:id, csrfmiddlewaretoken:csr};
+        mythis = this;
+        $.ajax({
+            url: "{% url 'editData' %}",
+            method: "POST",
+            data:mydata,
+            success: function(data){
+                // console.log(data);
+                $("#lastName").val(data.lname);
+                $("#firstName").val(data.fname);
+                $("#userId").val(data.id)
+            }
+        });
+    });
+    
+</script>
+
+<!-- <h1>GOT IT</h1> -->

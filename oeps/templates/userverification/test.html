@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Ajax</title>
+        <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+</head>
+<body>
+    <div class="alert alert-danger">
+        <h2 class="text-center">Ajax Operations</h2>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <h4 class="alert alert-info">ADD UPDATE RECORD</h4>
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="readonly" name="" id="userId" value="" readonly>
+                <label for="firstName">First name</label>
+                <input type="text" class="form-control" id="firstName" name="r_first_name" placeholder="First name" value="" >
+             
+                <label for="middleName">Middle name</label>
+                <input type="text" class="form-control" id="middleName" name="r_middle_name" placeholder="Middle name" value="">
+                          
+                <label for="lastName">Last name</label>
+                <input type="text" class="form-control" id="lastName" name="r_last_name" placeholder="Last name" value="">
+
+    <!-- Email and Username -->
+
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="r_email" placeholder="Someone@example.com" value="">
+
+
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="r_username" placeholder="Username" >
+
+
+                <label for="username">Phone</label>
+                <input type="text" class="form-control" id="phone" name="r_phone" placeholder="eg: 98XXXXXXXX" value="">
+
+
+`<!-- Password and role -->
+
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="r_pwd" placeholder="Enter Password" value="">
+
+                <label for="conformPassword">Confirm Password</label>
+                <input type="password" class="form-control" id="confirmPassword" name="r_conf_pwd" placeholder="Conform Password" value="{{reg_conf_pwd}}">
+
+                <select name="r_role" class="form-control">
+                    <option selected>Role</option>
+                    <option value="1">Admin</option>
+                    <option value="2">User</option>
+                </select>
+
+<!-- Submit Details -->
+
+                <input type="button" class="form-control btn btn-primary rounded-1" id="addUser" value="Register" >
+            </form>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-7">
+            <h4 class="text-center alert alert-info">
+                Show User Information
+            </h4>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Middle Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Password</th>
+                        <th scope="col">action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    {% for u in user %}
+                    <tr>
+                        <td>{{u.u_id}}</td>
+                        <td>{{u.u_f_name}}</td>
+                        <td>{{u.u_m_name}}</td>
+                        <td>{{u.u_l_name}}</td>
+                        <td>{{u.u_username}}</td>
+                        <td>{{u.u_email}}</td>
+                        <td><input type='button' class='btn btn-warning btn-edit btn-sm' value='Edit' data-sid='{{u.u_id}}'></td>
+                        <td><input type='button' class='btn btn-danger btn-del btn-sm' value='Delete' data-sid='{{u.u_id}}'></td>
+                    </tr>    
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="{% static 'bootstrap/js/jquery.js' %}"></script>
+    <script src="{% static 'bootstrap/js/popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    
+    {% include "userverification/ajax.html" %}
+
+</body>
+</html>

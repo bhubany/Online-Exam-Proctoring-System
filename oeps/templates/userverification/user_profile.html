@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/popper.min.css' %}"></head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="row-cols-2"></div>
+            <div class="row-cols-8">
+                <div class="row">
+                    <!-- -------Start of Header--------- -->
+                    <div class="myHeader text-center p-2">
+                        <p class="text-white"><a href="../" class="text-decoration-none">ONLINE EXAM PROCTORING SYSTEM</a></p>
+                    </div>
+                    <!-- -------End of Header--------- -->
+
+                    <!-- Start of body -->
+                    <div class="myBody">
+                        {% if success_msg %}
+                            <div class="mt-1 alert alert-success text-center">
+                                {{success_msg}}
+                            </div>
+                        {% endif %}
+                        <div class="p-5 text-center align-content-center">
+                            <h1>This is user Profile</h1>
+                        </div>
+                        <div>
+                            <form action="logout" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" value="" id="">
+                                <button class="btn btn-danger">Logout</button>
+                            </form>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm">
+                                <div class="border rounded p-5 m-5">
+                                    Capture Image
+                                </div>
+                            </div>
+                            <button class="btn btn-success">Verify Image</button>
+                        </div>
+                    </div>
+
+                    <!-- End of Body -->
+
+                    <!--start of footer -->
+                    <div>
+                        
+                    </div>
+                    <!-- End of Footer -->
+
+                </div>
+            </div>
+            <div class="row-cols-2"></div>
+        </div>
+    </div>
+
+
+<!--    Linking Js Code-->
+    <script src="{% static '../bootstrap/js/bootstrap.bundle.js'%}"></script>
+    <script src="{% static '../assets/js/myJs.js'%}"></script>
+</body>
+</html>

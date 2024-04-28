@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>User Login Page</title>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/popper.min.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="row align-middle pt-5">
+            <div class="row-cols-2"></div>
+            <div class="row-cols-8">
+                <div class="row pt-5 shadow-lg p-3 mb-5 bg-white rounded">
+                    <!-- -------Start of Header--------- -->
+                    <div class="myHeader text-center p-2 shadow-lg p-3 mb-5 bg-white rounded">
+                        <p class="text-white"><a href="../" class="text-decoration-none">ONLINE EXAM PROCTORING SYSTEM</a></p>
+                    </div>
+                    <!-- -------End of Header--------- -->
+
+                    <!-- Start of body -->
+                    <div class="myBody">
+                      {% if failure_msg %}
+                            <div class="mt-1 alert alert-danger text-center">
+                                {{failure_msg}}
+                            </div>
+                        {% endif %}
+                        <div class="">
+
+                            <form action="check_login" method="post">
+                                {% csrf_token %}
+                    <!-- Email and Username -->
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                      <label for="username">Username</label>
+                                      <input type="text" class="form-control" id="username" name="login_username" placeholder="Email or Username" value="">
+                                      <div class="valid-feedback">
+                                        Looks good!
+                                      </div>
+                                    </div>
+                                </div>
+                `<!-- Password -->
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                      <label for="password">Password</label>
+                                      <input type="password" class="form-control" id="password" name="login_password" placeholder="Enter Password" value="">
+                                      <div class="valid-feedback">
+                                        Looks good!
+                                      </div>
+                                    </div>
+                <!-- Submit Details -->
+                                <div class="p-3" align="center">
+                                    <div class="col-md-4">
+                                      <input type="submit" class="form-control btn btn-success rounded-1" id="register" value="Login">
+                                      <div class="valid-feedback">
+                                        Looks good!
+                                      </div>
+                                    </div>
+                                </div>
+                              </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- End of Body -->
+
+                    <!--start of footer -->
+                    <div>
+                        
+                    </div>
+                    <!-- End of Footer -->
+
+                </div>
+            </div>
+            <div class="row-cols-2"></div>
+        </div>
+    </div>
+
+
+<!--    Linking Js Code-->
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.js'%}"></script>
+    <script src="{% static 'assets/js/myJs.js'%}"></script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>User Face Verification Page</title>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/popper.min.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="row-cols-2"></div>
+            <div class="row-cols-8">
+                <div class="row">
+                    <!-- -------Start of Header--------- -->
+                    <div class="myHeader text-center p-2">
+                        <p class="text-white"><a href="../" class="text-decoration-none">ONLINE EXAM PROCTORING SYSTEM</a></p>
+                    </div>
+                    <!-- -------End of Header--------- -->
+
+                    <!-- Start of body -->
+                    <div class="myBody">                       
+                        <!-- Success Message -->
+                        <!-- {% if failure_msg %}
+                            <div class="mt-1 alert alert-danger text-center">
+                                {{failure_msg}}
+                            </div>
+                        {% endif %}
+                        {% if success_msg %}
+                            <div class="mt-1 alert alert-success text-center">
+                                {{success_msg}}
+                            </div>
+                        {% endif %} -->
+                        <div class="row">
+                            <div class="col">
+                            <form action="logout" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" value="" id="">
+                                <button class="btn btn-danger">Logout</button>
+                            </form>
+                        </div>
+                        <div class="p-5 text-center align-content-center">
+                             <!-- Taking Photo -->
+                             <div class="alert alert-info text-warning shadow p-3 mb-5 rounded">
+                                <h1>Take Face Input</h1>
+                                <p class="">Please focus on camera</p>
+                             </div>
+                            
+                    <!-- Streaming video through webcam-->
+                            <div class="row shadow p-3 mb-5 bg-body rounded">
+                                <div class="col calign-content-center">
+                                    <video class="border border-info border-5 border-5 rounded" src="" id="video"width="400" height="400" autoplay></video><br>
+                                    <button class="btn btn-success" id="capture">CAPTURE</button>                                    
+                                    <button type="button" class="btn btn-success" id="trainModule" onclick="trainModule('username')">Train module</button>
+                                </div>
+                                <div class="col">
+                                    <div class="card" style="width: 22.5rem;">
+                                        <img class="card-img-top pro_img" id="pro_img" src="{% static 'assets/images/User-Profile.png' %}" alt="User Face">
+                                        <div class="card-body">
+                                        <p class="card-text text-center btn btn-info"><span id="processingStatus" ><img style="visibility: hidden;" id="processingImageStatus" width="50" height="50" src="" alt=""></span>&nbsp; Processing</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            
+                            <div class="card" style="width: 15rem;">
+                                <img class="card-img-top u_img_1" id="u_img_1" src="{% static 'assets/images/User-Profile.png' %}" alt="User Face">
+                                <div class="card-body">
+                                  <p class="card-text text-center">
+                                      <button id="btn_img_1" class="btn btn-warning" disabled>Retake</button>
+                                  </p>
+                                </div>
+                            </div>
+                            <div class="card" style="width: 15rem;">
+                                <img class="card-img-top u_img_2" id="u_img_2" src="{% static 'assets/images/User-Profile.png' %}" alt="User Face">
+                                <div class="card-body">
+                                  <p class="card-text text-center">
+                                      <button id="btn_img_2" class="btn btn-warning" disabled>Retake</button>
+                                  </p>
+                                </div>
+                            </div>
+                            <div class="card" style="width: 15rem;">
+                                <img class="card-img-top u_img_3" id="u_img_3" src="{% static 'assets/images/User-Profile.png' %}" alt="User Face">
+                                <div class="card-body">
+                                  <p class="card-text text-center">
+                                      <button id="btn_img_3" class="btn btn-warning" disabled>Retake</button>
+                                  </p>
+                                </div>
+                            </div>
+                            <div class="card" style="width: 15rem;">
+                                <img class="card-img-top u_img_3" id="u_img_4" src="{% static 'assets/images/User-Profile.png' %}" alt="User Face">
+                                <div class="card-body">
+                                  <p class="card-text text-center">
+                                      <button id="btn_img_4" class="btn btn-warning" disabled>Retake</button>
+                                  </p>
+                                </div>
+                            </div>
+                            <div class="card" style="width: 15rem;">
+                                <img class="card-img-top u_img_3" id="u_img_5" src="{% static 'assets/images/User-Profile.png' %}" alt="User Face">
+                                <div class="card-body">
+                                  <p class="card-text text-center">
+                                      <button id="btn_img_5" class="btn btn-warning" disabled>Retake</button>
+                                  </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Previewing Image -->
+                        <div class="p-5 text-center align-content-center" style="display: none;">
+                            <canvas id="canvas" width="640" height="480"></canvas>
+                        </div>
+
+                    </div>
+                    <!-- End of Body -->
+
+                    <!--start of footer -->
+                    <div>
+                        
+                    </div>
+                    <!-- End of Footer -->
+
+                </div>
+            </div>
+            <div class="row-cols-2"></div>
+        </div>
+    </div>
+
+
+    <!-- js code for webcam and capturing images -->
+    <script>
+        async function getWebCam(){
+            try{
+                const videoSrc=await navigator.mediaDevices.getUserMedia({video:true});
+                var video=document.getElementById("video");
+                video.srcObject=videoSrc;
+            }catch(e){
+                console.log(e);
+            }
+        }
+        getWebCam();
+        var captured_id =1;
+        var capture=document.getElementById("capture");
+        var canvas=document.getElementById("canvas");
+        var context=canvas.getContext('2d');
+
+        capture.addEventListener("click",function(){
+            context.drawImage(video,0,0,650,490);
+            var dataURL = canvas.toDataURL();            
+            var csr = $("input[name=csrfmiddlewaretoken").val();
+            document.getElementById('pro_img').src=dataURL;
+            $('#capture').attr('disabled', true);
+            $('#processingImageStatus').attr('src', "{% static 'assets/images/loading1.gif' %}");
+            $('#processingImageStatus').css("visibility", "visible");;
+            if (captured_id==1){
+                img_id="#u_img_1";
+                btn_id="#btn_img_1";
+                captured_id=captured_id+1;
+            }else if (captured_id==2){
+                img_id="#u_img_2";
+                btn_id="#btn_img_2";
+                captured_id=captured_id+1;
+            }else if (captured_id==3){
+                img_id="#u_img_3";
+                btn_id="#btn_img_3";
+                captured_id=captured_id+1;
+            }else if (captured_id==4){
+                img_id="#u_img_4";
+                btn_id="#btn_img_4";
+                captured_id=captured_id+1;
+            }else if (captured_id==5){
+                img_id="#u_img_5";
+                btn_id="#btn_img_5";
+                captured_id=captured_id+1;
+            }else{
+                captured_id=captured_id+1;
+            }
+            if(captured_id>=6){
+                $('#trainModule').attr('disabled', false);
+                $('#capture').attr('disabled', true);
+            }
+
+            if (captured_id<=6){
+                ajaxCall(dataURL, csr, img_id, btn_id);
+            }else{
+                alert ("5 image already Taken");
+                $('#capture').attr('disabled', true);
+            }
+        });
+
+        function ajaxCall(usr_img, csr, img_id, btn_id){
+            mydata = {img_url:usr_img, csrfmiddlewaretoken:csr,img_id:img_id};
+            $.ajax({
+                url: "{% url 'faceTest' %}",
+                method: "POST",
+                data: mydata,
+                dataType: "json",
+                success: function(data){
+                    // console.log(data);
+                    if (data.status == 1){
+                        usr=data.faceDetectedImage
+                        console.log(usr);
+                        $(img_id).removeAttr('src');
+                        $(img_id).attr('src', usr+"?v="+(new Date()).getTime());
+                        $('#capture').attr('disabled', false);
+                        $(btn_id).attr('disabled', false);
+                        $('#processingImageStatus').attr('src', "{% static 'assets/images/Processing-Success.gif' %}");
+                    }
+                    if (data.status==0){
+                        console.log("Unable to save form");
+                        $('#userId').val("");
+                        $("form")[0].reset();
+                    }
+                }
+            });
+        };
+
+        function trainModule(val){
+            console.log("Training Data of username ==>" + val);
+            mydata={u_usernam:val}
+            $.ajax({
+                url: "{% url 'train_module' %}",
+                method: "POST",
+                data: mydata,
+                dataType: "json",
+                success: function(data){
+                    // console.log(data);
+                    if (data.status == 1){
+                        usr=data.faceDetectedImage
+                        console.log(usr);
+                        window.location.href = "user_profile.html";
+                    }
+                    if (data.status==0){
+                        console.log("Unable to Train Data");
+                    }
+                }
+            });
+        }
+	</script>
+
+
+<!--    Linking Js Code-->
+<script src="{% static 'bootstrap/js/jquery.js' %}"></script>
+<script src="{% static 'bootstrap/js/popper.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

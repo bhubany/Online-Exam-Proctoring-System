@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>User verification System</title>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/popper.min.css' %}"></head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="row-cols-2"></div>
+            <div class="row-cols-8">
+                <div class="row">
+                    <!-- -------Start of Header--------- -->
+                    <div class="myHeader text-center p-2">
+                        <p class="text-white"><a href="../" class="text-decoration-none">ONLINE EXAM PROCTORING SYSTEM</a></p>
+                    </div>
+                    <!-- -------End of Header--------- -->
+
+                    <!-- Start of body -->
+                    <div class="myBody">                        
+                        <!-- Failure Message -->
+                        {% if failure_msg %}
+                            <div class="mt-1 alert alert-danger text-center">
+                                {{failure_msg}}
+                            </div>
+                        {% endif %}
+                        <div class="">
+                            <form action="register_details" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                <div class="col-md-4 mb-3">
+                                  <label for="firstName">First name</label>
+                                  <input type="text" class="form-control" id="firstName" name="r_first_name" placeholder="First name" value="{{reg_f_name}}" >
+                                    {% if reg_f_name_err %}
+                                          <div class="ml-3 mt-1 text-danger">
+                                              {{reg_f_name_err}}
+                                          </div>
+                                      {% endif %}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                  <label for="middleName">Middle name</label>
+                                  <input type="text" class="form-control" id="middleName" name="r_middle_name" placeholder="Middle name" value="{{reg_m_name}}">
+                                  {% if reg_m_name_err %}
+                                          <div class="ml-3 mt-1 text-danger">
+                                              {{reg_m_name_err}}
+                                          </div>
+                                      {% endif %}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                  <label for="lastName">Last name</label>
+                                  <input type="text" class="form-control" id="lastName" name="r_last_name" placeholder="Last name" value="{{reg_l_name}}">
+                                  {% if reg_l_name_err %}
+                                          <div class="ml-3 mt-1 text-danger">
+                                              {{reg_l_name_err}}
+                                          </div>
+                                      {% endif %}
+                                </div>
+                    <!-- Email and Username -->
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                      <label for="email">Email</label>
+                                      <input type="email" class="form-control" id="email" name="r_email" placeholder="Someone@example.com" value="{{reg_email}}">
+                                      {% if reg_email_err %}
+                                          <div class="ml-3 mt-1 text-danger">
+                                              {{reg_email_err}}
+                                          </div>
+                                      {% endif %}
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                      <label for="username">Username</label>
+                                      <input type="text" class="form-control" id="username" name="r_username" placeholder="Username" value="{{reg_username}}">
+                                      {% if reg_username_err %}
+                                          <div class="ml-3 mt-1 text-danger">
+                                              {{reg_username_err}}
+                                          </div>
+                                      {% endif %}
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                      <label for="username">Phone</label>
+                                      <input type="text" class="form-control" id="phone" name="r_phone" placeholder="eg: 98XXXXXXXX" value="{{reg_phone}}">
+                                      {% if reg_phone_err %}
+                                          <div class="ml-3 mt-1 text-danger">
+                                              {{reg_phone_err}}
+                                          </div>
+                                      {% endif %}
+                                    </div>
+                                </div>
+
+                `<!-- Password and role -->
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                      <label for="password">Password</label>
+                                      <input type="password" class="form-control" id="password" name="r_pwd" placeholder="Enter Password" value="{{reg_pwd}}">
+                                      {% if reg_pwd_err %}
+                                          <div class="ml-3 mt-1 text-danger">
+                                              {{reg_pwd_err}}
+                                          </div>
+                                      {% endif %}
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                      <label for="conformPassword">Confirm Password</label>
+                                      <input type="password" class="form-control" id="confirmPassword" name="r_conf_pwd" placeholder="Conform Password" value="{{reg_conf_pwd}}">
+                                      {% if reg_pwd_err %}
+                                          <div class="ml-3 mt-1 text-danger">
+                                              {{reg_pwd_err}}
+                                          </div>
+                                      {% endif %}
+                                    </div>
+                                    <div class="col-md-4 mb-3"></div>
+                                      <select name="r_role" class="form-control">
+                                        <option selected>Role</option>
+                                        <option value="1">Admin</option>
+                                        <option value="2">User</option>
+                                      </select>
+                                      {% if reg_role_err %}
+                                          <div class="ml-3 mt-1 text-danger">
+                                              {{reg_role_err}}
+                                          </div>
+                                      {% endif %}
+                                    </div>
+                                </div>
+                <!-- Submit Details -->
+                                <div class="p-3" align="center">
+                                    <div class="col-md-4">
+                                      <input type="submit" class="form-control btn btn-primary rounded-1" id="register" value="Register" name="register_user">
+                                      <div class="valid-feedback">
+                                        Looks good!
+                                      </div>
+                                    </div>
+                                </div>
+                              </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- End of Body -->
+
+                    <!--start of footer -->
+                    <div>
+                        
+                    </div>
+                    <!-- End of Footer -->
+
+                </div>
+            </div>
+            <div class="row-cols-2"></div>
+        </div>
+    </div>
+
+
+<!--    Linking Js Code-->
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.js'%}"></script>
+    <script src="{% static 'assets/js/myJs.js'%}"></script>
+</body>
+</html>
