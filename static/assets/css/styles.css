@@ -1,0 +1,29 @@
+h1{
+    color: rebeccapurple;
+    font-family: "Akshar Unicode";
+    font-size: 100px;
+}
+.myHeader{
+    background-color: #1b5693;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-decoration-color: white;
+}
+.myHeader>p{
+    font-size: 40px;
+    font-family: "fantasy";
+    font-weight: bold;
+    padding-top: 5px;
+}
+.myBody{
+    border: 5px #89b0f1 solid;
+    border-top: none;
+}
+/* .sitting{
+    position: relative;
+}
+.myClock{
+    position: absolute;
+    height: 10px;
+    width: 20px;
+} */

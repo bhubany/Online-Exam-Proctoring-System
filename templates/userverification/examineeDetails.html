@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <style>
+        .glow {
+            color: #fff;
+            text-align: center;
+            -webkit-animation: glow 1s ease-in-out infinite alternate;
+            -moz-animation: glow 1s ease-in-out infinite alternate;
+            animation: glow 1s ease-in-out infinite alternate;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="row-cols-2"></div>
+            <div class="row-cols-8">
+                <div class="row">
+                    <!-- -------Start of Header--------- -->
+                    
+                {% include 'userverification/header.html' %}
+                    <!-- -------End of Header--------- -->
+
+                    <!-- Start of body -->
+                    <div class="myBody">
+                        {% if success_msg %}
+                            <div class="mt-1 alert alert-success text-center">
+                                {{success_msg}}
+                            </div>
+                        {% elif var2 %}
+                            <div class="mt-1 alert alert-danger text-center">
+                                {{failure_msg}}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="row p-1">
+                            <div class="col">
+                                <form action="logout" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="" id="">
+                                    <button class="btn btn-danger">Logout</button>
+                                </form>
+                            </div>
+                            <div class="col">
+                                <h5>Exam ongoing: {{exam_code}}</h5>
+                            </div>
+                            <div class="col">
+                                <form class="p-1" action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{exam_code}}" id="examCode">
+                                    <button class="btn btn-danger" onclick="endExam();">End Exam</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- ------------TESTING--------------- -->
+                        <div class="d-none">
+                            <img src="" id="photo" width="200" height="200" alt="">
+                            <p>Received Images</p>
+                        </div>
+                        <!-- -------------END ------------TESTING--------------- -->
+
+                        <div class="p-5 text-center align-content-center border border-info">
+                            <div class="row">
+                                <table class="table">
+                                    <thead class="table-info">
+                                      <tr>
+                                        <th scope="col">User Name</th>
+                                        <th scope="col">Iteration</th>
+                                        <th scope="col">Verification</th>
+                                        <th scope="col">Face Count</th>
+                                        <th scope="col">Roll</th>
+                                        <th scope="col">Pitch</th>
+                                        <th scope="col">Yaw</th>
+                                        <th scope="col">Estimated Pose</th>
+                                        <th scope="col">Extra</th>
+                                        <th scope="col">Summary</th>
+                                        <th></th>
+                                        <th>Suspicious-status</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody id="tbody">
+                                        {% for data in examinee_data %}
+                                        <tr id="{{data.u_username}}">
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <!-- <div class="card" style="width: 18rem;">
+                                    <img src="{% static 'assets/images/User-Profile.png' %}" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                      <h5 class="card-title">Card title</h5>
+                                      <p class="card-text">
+                                        <span><i class="fa-duotone fa-circle"></i></span>
+                                        <span><i class="fa-solid fa-circle text-success"></i></span>
+                                        <span><i class="fa-solid fa-circle text-warning"></i></span>
+                                        <span><i class="fa-solid fa-circle text-danger"></i></span>
+                                    </p>
+                                    <a href="#" class="btn btn-primary">View Full</a>
+                                    </div>
+                                  </div>
+
+                                  <div class="card" style="width: 18rem;">
+                                    <img src="{% static 'assets/images/User-Profile.png' %}" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                      <h5 class="card-title">Card title</h5>
+                                      <p class="card-text">
+                                        <span><i class="fa-duotone fa-circle"></i></span>
+                                        <span><i class="fa-solid fa-circle text-success"></i></span>
+                                        <span><i class="fa-solid fa-circle text-warning"></i></span>
+                                        <span><i class="fa-solid fa-circle text-danger"></i></span>
+                                    </p>
+                                    <a href="#" class="btn btn-primary">View Full</a>
+                                    </div>
+                                  </div>
+                                  <div class="card" style="width: 18rem;">
+                                    <img src="{% static 'assets/images/User-Profile.png' %}" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                      <h5 class="card-title">Card title</h5>
+                                      <p class="card-text">
+                                        <span><i class="fa-duotone fa-circle"></i></span>
+                                        <span><i class="fa-solid fa-circle text-success"></i></span>
+                                        <span><i class="fa-solid fa-circle text-warning"></i></span>
+                                        <span><i class="fa-solid fa-circle text-danger"></i></span>
+                                    </p>
+                                    <a href="#" class="btn btn-primary">View Full</a>
+                                    </div>
+                                  </div>
+                                  <div class="card" style="width: 18rem;">
+                                    <img src="{% static 'assets/images/User-Profile.png' %}" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                      <h5 class="card-title">Examniee Name</h5>
+                                      <p class="card-text">
+                                          <span><i class="fa-duotone fa-circle"></i></span>
+                                          <span><i class="fa-solid fa-circle text-success"></i></span>
+                                          <span><i class="fa-solid fa-circle text-warning"></i></span>
+                                          <span><i class="fa-solid fa-circle text-danger"></i></span>
+                                      </p>
+                                      <button onclick="playSound();">Play</button>  
+                                    <button onclick="stopSound();">Stop</button>  
+                                    </div>
+                                  </div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- End of Body -->
+
+                    <!--start of footer -->
+                    
+                {% include 'userverification/footer.html' %}
+                    <!-- End of Footer -->
+
+                </div>
+            </div>
+            <div class="row-cols-2"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript" charset="utf-8">
+        
+        
+        const user_username="{{user_username}}";
+        const examCode="{{exam_code}}";
+        var count =1;
+        var unusual_activity ='';
+
+        // End Exam
+        function endExam(){
+            var csr = $("input[name=csrfmiddlewaretoken").val();
+            eId='';
+            mydata = {eId:eId, csrfmiddlewaretoken:csr, faculty:examCode};
+            // alert(eId);
+            $.ajax({
+                url: "{% url 'endExam' %}",
+                method: "POST",
+                data:mydata,
+                success: function(data){
+                    console.log(data);
+                    if (data.status == 1){
+                        alert("Exam hasbeen Ended Successfully");
+                        window.location.href ="{% url 'admin_profile' %}";
+                    }else{
+                        window.alert("Error occurs try again later");
+                    }
+                }
+            });
+        }
+       
+        // # GEt output details
+
+        function getOutputValues(){
+            var csr = $("input[name=csrfmiddlewaretoken").val();
+            mydata={csrfmiddlewaretoken: csr, examCode:examCode, count:count};
+            output=''
+
+            $.ajax({
+                url: "{% url 'getOutputValues' %}",
+                method: "POST",
+                data: mydata,
+                dataType: "json",
+                success: function(data){
+                    if (data.status == 1){
+                        sub_data=data.mainOutputList
+                        // console.log(sub_data);
+                        for (j=0; j<sub_data.length; j+=2){
+                            value=sub_data[j];
+                            username=sub_data[j+1];
+                            console.log(value);
+                            console.log(username);
+                            
+                            output="<td>"+username+"</td><td>"+value[0]+"</td><td>"+value[1]+"</td><td>"+value[2]+"</td><td>"+value[3]+"</td><td>"+value[4]+"</td><td>"+value[5]+"</td><td>"+value[8]+"</td><td>"+value[6]+"</td><td>"+value[7]+"</td><td id="+username+"-alarm"+"></td>";    
+                            
+                            if (value[2]>1 || value[2]<1 || value[1]=="unknown Person" || value[1]=="No Face" || value[8]=="away"){
+                                output+='<td><span><img width="50" height="50" src="{% static "assets/images/red-circle.png" %}" alt="Security Camera"> </span></td>';
+                                playSound();
+                            }else{
+                                output+='<td><span><img width="50" height="50" src="{% static "assets/images/green-circle.png" %}" alt="Security Camera"> </span></td>';
+                                stopSound();
+                            }
+                            $('#'+username).html(output);
+                        }
+
+                    }else{
+                        console.log(data);
+                    }
+                }
+            });
+        }
+        
+        const FPS = 2;
+        setInterval(() => {
+        // $( document ).ready(function() {
+            count = count+1;
+            getOutputValues();
+        // });
+        }, 1000/FPS);
+        // ------------------
+
+        // Playing Audio
+        soundPlayer = new Audio("{% static 'assets/sounds/beep1.mp3'%}");
+        function playSound() {
+            soundPlayer.play();
+            }
+
+        function stopSound() {
+            soundPlayer.pause();
+        }
+
+        
+
+    </script>
+
+<!--    Linking Js Code-->
+<script src="{% static 'bootstrap/js/jquery.js' %}"></script>
+<script src="{% static 'bootstrap/js/popper.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

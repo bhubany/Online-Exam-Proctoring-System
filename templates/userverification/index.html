@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>User verification System</title>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/popper.min.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="row-cols-2"></div>
+            <div class="row-cols-8">
+                <div class="row">
+                    <!-- -------Start of Header--------- -->
+                    
+                {% include 'userverification/header.html' %}
+                    <!-- -------End of Header--------- -->
+
+                    <!-- Start of body -->
+                    <div class="myBody">
+                        <div class="row" style="background-color: #fff;">
+                            <div class="col-lg-6 border-right border-info">
+                                <div class="col">
+                                    <img src="{% static 'assets/images/clock2.png' %}" alt="" style="position: absolute; width: 150px;height: 300px; padding-left: 0px;">
+                                </div>
+                                <div class="col">
+                                    <img src="{% static 'assets/images/sitting1.png' %}" alt=""  height="400" width="auto" style="position: relative;">
+                                </div>
+                            </div>
+                            <div class="col-lg-6" style="border-left: #89b0f1 5px solid;">
+                                <div>
+                                    <div class="pt-1">
+                                        <h1 class="font-weight-bold text-center">Welcome,</h1><br>
+                                    </div>
+                                    <div class="pt-2">
+                                        <h4 class="text-center" style="">A MAJOR PROJECT SUBMITTED IN PARTIAL 
+                                            FULFILLMENT OF THE REQUIREMENT FOR THE 
+                                            DEGREE OF BACHELOR IN COMPUTER 
+                                            ENGINEERING </h4>
+                                            <br>
+                                            <h5 class="text-center">Submitted to: <br>
+                                                Department of Computer and Electronics Engineering
+                                                <br>APRIL, 2022
+                                                </h5>
+                                    </div>
+                                </div>
+                                <div class="p-5 text-center align-content-center">
+                                    <a href="user_login"><button class="btn btn-lg btn-success">Login</button></a>
+                                    <a href="register"><button class="btn btn-lg btn-primary">Register</button></a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- End of Body -->
+
+                    <!--start of footer -->
+                    {% include 'userverification/footer.html' %}
+                    <!-- End of Footer -->
+
+                </div>
+            </div>
+            <div class="row-cols-2"></div>
+        </div>
+    </div>
+
+
+<!--    Linking Js Code-->
+    <script src="{% static '../bootstrap/js/bootstrap.bundle.js'%}"></script>
+    <script src="{% static '../assets/js/myJs.js'%}"></script>
+</body>
+</html>

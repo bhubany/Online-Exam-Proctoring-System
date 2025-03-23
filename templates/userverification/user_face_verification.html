@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <title>User Face Registration Page</title>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="row-cols-2"></div>
+            <div class="row-cols-8">
+                <div class="row">
+                    <!-- -------Start of Header--------- -->
+
+                    {% include 'userverification/header.html' %}
+                    <!-- -------End of Header--------- -->
+
+                    <!-- Start of body -->
+                    <div class="myBody">
+                        <!-- Success Message -->
+                        {% if failure_msg %}
+                        <div class="mt-1 alert alert-danger text-center">
+                            {{failure_msg}}
+                        </div>
+                        {% endif %}
+                        {% if success_msg %}
+                        <div class="mt-1 alert alert-success text-center">
+                            {{success_msg}}
+                        </div>
+                        {% endif %}
+                        <div class="">
+                            <div class="col">
+                                <form action="logout" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="" id="">
+                                    <button class="btn btn-danger">Logout</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class=" text-center align-content-center">
+                            <!-- Taking Photo -->
+                            <div class="alert alert-info text-warning shadow rounded">
+                                <h1 class="p-0">Take Face Input</h1>
+                                <p class="p-0">Please focus on camera</p>
+                            </div>
+
+                            <!-- Streaming video through webcam-->
+                            <div class="row shadow p-3 mb-5 bg-body rounded">
+                                <div class="col align-content-center">
+                                    <video class="border border-info border-5 border-5 rounded" src="" id="video"
+                                        width="400" height="400" autoplay></video>
+                                    <form class="pt-1" action="#" method="post">
+                                        {% csrf_token %}
+                                        <input type="text" readonly id="img_user_username" value="{{user_username}}">
+                                        <input type="button" class="btn btn-success btn-lg" id="capture" value="Verify">
+                                    </form>
+                                </div>
+                                <div class="col">
+                                    <div class="card" style="width: 22.5rem;">
+                                        <img class="card-img-top pro_img" id="pro_img"
+                                            src="{% static 'assets/images/User-Profile.png' %}" alt="User Face">
+                                        <div class="card-body">
+                                            <p class="card-text text-center btn btn-info"><span
+                                                    id="processingStatus"><img style="visibility: hidden;"
+                                                        id="processingImageStatus" width="50" height="50" src=""
+                                                        alt=""></span>&nbsp; Processing</p>
+                                            <div class="alert alert-info" id="verificationMsg" hidden>
+                                                <!-- showing error msg for face detection -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Previewing Image -->
+                        <div class="p-5 text-center align-content-center" style="display: none;">
+                            <canvas id="canvas" width="640" height="480"></canvas>
+                        </div>
+
+                    </div>
+                    <!-- End of Body -->
+
+                    <!--start of footer -->
+
+                    {% include 'userverification/footer.html' %}
+                    <!-- End of Footer -->
+
+                </div>
+            </div>
+            <div class="row-cols-2"></div>
+        </div>
+    </div>
+
+
+    <!-- js code for webcam and capturing images -->
+    <script>
+        async function getWebCam() {
+            try {
+                const videoSrc = await navigator.mediaDevices.getUserMedia({ video: true });
+                var video = document.getElementById("video");
+                video.srcObject = videoSrc;
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        getWebCam();
+        var captured_id = 1;
+        var capture = document.getElementById("capture");
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext('2d');
+
+        capture.addEventListener("click", function () {
+            context.drawImage(video, 0, 0, 650, 490);
+            var dataURL = canvas.toDataURL();
+            document.getElementById('pro_img').src = dataURL;
+            $('#capture').attr('disabled', true);
+            $('#processingImageStatus').attr('src', "{% static 'assets/images/loading1.gif' %}");
+            $('#processingImageStatus').css("visibility", "visible");
+            user_verification(dataURL);
+        });
+
+
+        //Training the captured image
+        function user_verification(usr_img) {
+            var csr = $("input[name=csrfmiddlewaretoken").val();
+            $('#verifyUser').attr('disabled', true);
+            var u_username = $('#img_user_username').val();
+            mydata = { csrfmiddlewaretoken: csr, username: u_username, img_url: usr_img };
+            console.log(mydata)
+            $.ajax({
+                url: "{% url 'verify_user_face' %}",
+                method: "POST",
+                data: mydata,
+                dataType: "json",
+                success: function (data) {
+                    usr = data.img_path
+                    msg = data.msg
+                    console.log(data);
+                    if (data.status == 1) {
+                        $('#processingImageStatus').attr('src', "{% static 'assets/images/Processing-Success.gif' %}");
+                        $('#pro_img').attr('src', usr + "?v=" + (new Date()).getTime())
+                        $("#verificationMsg").attr("hidden", false);
+                        $("#verificationMsg").html(msg);
+                        if (data.user == 'student') {
+                            window.location.href = "{% url 'user_profile' %}";
+                        } else if (data.user == 'admin') {
+                            window.location.href = "{% url 'admin_profile' %}";
+                        } else {
+                            $("#verificationMsg").html("Error occurs try again later");
+                        }
+                    } else if (data.status == 2) {
+                        alert("Face didnot matched. Try again!");
+                        $('#processingImageStatus').attr('src', "{% static 'assets/images/failed.gif' %}");
+                        $('#capture').attr('disabled', false);
+                        $("#verificationMsg").attr("hidden", false);
+                        $("#verificationMsg").html(msg);
+                    }
+                    else {
+                        $('#processingImageStatus').attr('src', "{% static 'assets/images/failed.gif' %}");
+                        console.log("Unable to Train Data");
+                        $('#capture').attr('disabled', false);
+                        $("#verificationMsg").attr("hidden", false);
+                        $("#verificationMsg").html(msg);
+                    }
+                }
+            });
+        }
+    </script>
+
+
+    <!--    Linking Js Code-->
+    <script src="{% static 'bootstrap/js/jquery.js' %}"></script>
+    <script src="{% static 'bootstrap/js/popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+
+</html>

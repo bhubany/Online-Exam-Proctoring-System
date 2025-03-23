@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="row-cols-2"></div>
+            <div class="row-cols-8">
+                <div class="row">
+                    <!-- -------Start of Header--------- -->
+                    
+                {% include 'userverification/header.html' %}
+                    <!-- -------End of Header--------- -->
+
+                    <!-- Start of body -->
+                    <div class="myBody">
+                        {% if success_msg %}
+                            <div class="mt-1 alert alert-success text-center">
+                                {{success_msg}}
+                            </div>
+                        {% endif %}
+                        <!-- <div class="p-5 text-center align-content-center">
+                            <h1>This is user Profile</h1>
+                        </div> -->
+                        <div>
+                            <form action="logout" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" value="" id="">
+                                <button class="btn btn-danger">Logout</button>
+                            </form>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <h1>Guidelines</h1>
+                                <list>
+                                    <ol>1. Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim ad harum facilis consectetur, repellat obcaecati, quasi voluptas expedita eligendi numquam cum nemo veritatis iusto. Expedita neque eveniet iste praesentium sed!</ol>
+                                    <ol>1. Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim ad harum facilis consectetur, repellat obcaecati, quasi voluptas expedita eligendi numquam cum nemo veritatis iusto. Expedita neque eveniet iste praesentium sed!</ol>
+                                    <ol>1. Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim ad harum facilis consectetur, repellat obcaecati, quasi voluptas expedita eligendi numquam cum nemo veritatis iusto. Expedita neque eveniet iste praesentium sed!</ol>
+                                    <ol>1. Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim ad harum facilis consectetur, repellat obcaecati, quasi voluptas expedita eligendi numquam cum nemo veritatis iusto. Expedita neque eveniet iste praesentium sed!</ol>
+                                </list>
+                            </div>
+                            <div>
+                                <table class="table">
+                                    <thead class="table-info">
+                                      <tr>
+                                        <th scope="col">Id</th>
+                                        <th scope="col">ExamId</th>
+                                        <th scope="col">Details</th>
+                                        <th scope="col">Action</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody id="tbody">
+                                        {% for e in e_details %}
+                                      <tr>
+                                        <th scope="row">{{e.e_id}}</th>
+                                        <td>{{e.e_code}}</td>
+                                        <td>{{e.e_details}}</td>
+                                        <td>
+                                            <form action="" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" id="eCode" name="exam_code" value="{{e.e_code}}">
+                                                <input type="hidden" id="eUsername" name="user_username" value="{{user_username}}">
+                                                <input type="submit" class="btn btn-primary" value="Enter" onclick="start_exam();">
+                                            </form>
+                                        </td>
+                                      </tr>
+                                      {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                    <!-- End of Body -->
+
+                    <!--start of footer -->
+                    
+                {% include 'userverification/footer.html' %}
+                    <!-- End of Footer -->
+
+                </div>
+            </div>
+            <div class="row-cols-2"></div>
+        </div>
+    </div>
+
+
+    <script>
+        
+        const user_username="{{user_username}}";
+         function start_exam(){
+            // alert(user_username);
+            var examCode = document.getElementById('eCode').value;
+            var userName = document.getElementById('eUsername').value;
+            var csr = $("input[name=csrfmiddlewaretoken").val();
+            mydata = {examCode:examCode, csrfmiddlewaretoken: csr,u_username:userName};
+            $.ajax({
+                url: "{% url 'checkExamStatus' %}",
+                method: "POST",
+                data: mydata,
+                dataType: "json",
+                success: function(data){
+                    console.log(data);
+                    if (data.status == "1"){
+                        alert("Exam has started Successfully");
+                        window.location.href = "{% url 'final_exam_page' %}"; 
+                    }else if (data.status==2){
+                        alert(data.msg);
+                    }else if (data.status==0){
+                        alert("Exam has not started yet");
+                    }else{
+                        alert("Invalid Exam Code");
+                    }
+                }
+            });
+            // window.location.href = "{% url 'final_exam_page' %}"; 
+        };
+    </script>
+
+    <script src="{% static 'bootstrap/js/jquery.js' %}"></script>
+    <script src="{% static 'bootstrap/js/popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

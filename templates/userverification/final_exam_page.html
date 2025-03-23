@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+   
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="row-cols-2"></div>
+            <div class="row-cols-8">
+                <div class="row">
+                    <!-- -------Start of Header--------- -->
+                    
+                {% include 'userverification/header.html' %}
+                    <!-- -------End of Header--------- -->
+
+                    <!-- Start of body -->
+                    <div class="myBody">
+                        {% if success_msg %}
+                            <div class="mt-1 alert alert-success text-center">
+                                {{success_msg}}
+                            </div>
+                        {% endif %}
+                        <h1 class="alert alert-success">{{ exam_code}}</h1>
+                        <div>
+                            <form action="logout" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" value="" id="">
+                                <button class="btn btn-danger">Logout</button>
+                            </form>
+                        </div>
+                        <div>
+                            <div class="row">                                
+                                <div class="col-2">
+                                    <div class="border border-5 border-warning shadow-lg p-3 mb-5 bg-white rounded sticky-top top-0 end-0 position-absolute">
+                                        <img width="150" height="150" src="{% static 'assets/images/Camera.png' %}" alt="Security Camera">
+                                    </div>
+                                </div>
+                                <div class="col-10">
+                                    <div class="position-absolute top-0 end-0 d-none">
+                                        <video class="border border-info border-5 border-5 rounded" src="" id="videoElement"width="200" height="200" autoplay></video><br>
+                                        <canvas id="canvas" width="400" height="300"></canvas>
+                                        <!-- <p class="btn btn-primary" id="capture">Timer: 3:00:00</button> -->
+                                    </div>
+                                    <div class="d-none">
+                                        <img src="" id="photo" width="200" height="200" alt="">
+                                        <p>Received Images</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col bg-light">
+                                <div class="border rounded p-5 m-5">
+                                    <div>
+                                        <div class="alert alert-info">
+                                            <h1>List Of Questions</h1>
+                                        </div>
+                                        <div>
+                                            <p>1. Question </p>
+                                            <p>2. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam tempore maxime et fuga ab voluptates quasi ut asperiores dolorum dolor, repudiandae enim. Velit hic, ad rem optio distinctio id amet. </p>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        <button type="button" class="btn btn-success" onclick="submit_exam()">
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        
+                    </div>
+                    <!-- End of Body -->
+
+                    <!--start of footer -->
+                    
+                {% include 'userverification/footer.html' %}
+                    <!-- End of Footer -->
+
+                </div>
+            </div>
+            <div class="row-cols-2"></div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript" charset="utf-8">
+
+        // let url =`ws://${window.location.host}/ws/socket-server/`;
+        // console.log(url);
+
+        const socket = new WebSocket('ws://localhost:8000/ws/some_url/');
+
+        // Listening to received message
+
+        socket.onmessage= function(e){
+            // console.log(e) // Event contain all detils
+            let data = JSON.parse(e.data)
+            console.log('Data: ',data)
+
+            if (data.examWarning ==='True'){
+                alert(data.message);
+                window.location.href="{% url 'user_profile' %}";
+            }
+        }
+
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        const video = document.querySelector("#videoElement");
+
+        video.width = 400;
+        video.height = 300; 
+
+        const user_username="{{user_username}}";
+
+
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(function (error) {
+                console.log("ERROR== "+error);
+            });
+        }
+
+        const FPS = 2;
+        count=1
+        setInterval(() => {
+            width=video.width;
+            height=video.height;
+            context.drawImage(video, 0, 0, width , height );
+            var data = canvas.toDataURL('image/png');
+            var examCode="{{exam_code}}";
+            // console.log(examCode);
+            // console.log(typeof data);
+            socket.send(JSON.stringify({
+                'count':count,
+                'examCode':examCode,
+                'admin':'False',
+                'message':data,
+                'user_username':user_username,
+            }));
+            count=count+1;
+            // context.clearRect(0, 0, width,height );
+        }, 1000/FPS);
+
+
+        // # Submit exam//
+        function submit_exam(){
+            window.location.href='{% url "user_profile" %}'
+        }
+	</script>
+
+    <script src="{% static 'bootstrap/js/jquery.js' %}"></script>
+    <script src="{% static 'bootstrap/js/popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

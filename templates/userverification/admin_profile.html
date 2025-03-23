@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/popper.min.css' %}"></head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="row-cols-2"></div>
+            <div class="row-cols-8">
+                <div class="row">
+                    <!-- -------Start of Header--------- -->
+                    
+                {% include 'userverification/header.html' %}
+                    <!-- -------End of Header--------- -->
+
+                    <!-- Start of body -->
+                    <div class="myBody">
+                        {% if success_msg %}
+                            <div class="mt-1 alert alert-success text-center">
+                                {{success_msg}}
+                            </div>
+                        {% elif var2 %}
+                            <div class="mt-1 alert alert-danger text-center">
+                                {{failure_msg}}
+                            </div>
+                        {% endif %}
+                        
+                        <div>
+                            <form action="logout" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" value="" id="">
+                                <button class="btn btn-danger">Logout</button>
+                            </form>
+                        </div>
+
+                        <div class="p-5 text-center align-content-center border border-info">
+                            <div class="">
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <select name="exam_facl" id="examFacl" class="form-select" aria-label="Default select example">
+                                            <option selected value="0">Select Faculty</option>
+                                            <option value="computer">Computer Engineering</option>
+                                            <option value="civil">Civil Engineering</option>
+                                            <option value="electronics">Electronics Engineering</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <textarea name="exam_details" id="examDetails" class="form-control" cols="20" rows="4" placeholder="Enter Exam Details"></textarea>
+                                    </div>
+                                    <div class="mb-3">                                    
+                                        <button class="btn btn-primary orm-control" onclick="scheduleExam();">Schedule Exam</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div>
+                                <table class="table">
+                                    <thead class="table-info">
+                                      <tr>
+                                        <th scope="col">Id</th>
+                                        <th scope="col">ExamId</th>
+                                        <th scope="col">Details</th>
+                                        <th scope="col">Faculty</th>
+                                        <th></th>
+                                        <th scope="col">Action</th>
+                                        <th></th>
+                                      </tr>
+                                    </thead>
+                                    <tbody id="tbody">
+                                        {% for e in exam_data %}
+                                      <tr>
+                                        <th scope="row">{{e.e_id}}</th>
+                                        <td>{{e.e_code}}</td>
+                                        <td>{{e.e_details}}</td>
+                                        <td>{{e.e_faculty}}</td>
+                                        <td>
+                                           
+                                        </td>
+                                            <td>
+                                                <input type='button' class='btn btn-success btn-start-exam btn-sm' value='Start Exam' data-sid='{{e.e_id}}' onclick="startExam('{{e.e_id}}', '{{e.e_faculty}}')">
+                                                
+                                                <input type='button' class='btn btn-danger btn-end-exam btn-sm' value='End Exam' data-sid='{{e.e_id}}' onclick="endExam('{{e.e_id}}', '{{e.e_faculty}}')">
+                                                
+                                            </td>
+                                            <td><input type='button' class='btn btn-success btn-start-exam btn-sm' value='View Details' data-sid='{{e.e_id}}' onclick="viewDetails('{{e.e_id}}', '{{e.e_faculty}}')"></td>
+                                      </tr>
+                                      {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- End of Body -->
+
+                    <!--start of footer -->
+                    
+                {% include 'userverification/footer.html' %}
+                    <!-- End of Footer -->
+
+                </div>
+            </div>
+            <div class="row-cols-2"></div>
+        </div>
+    </div>
+
+<!-- ------------------ADD Exam Details--------- -->
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="addExamForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <form method="post">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Email address</label>
+                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <div class="mb-3 form-check">
+                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                  <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <script>
+       
+
+        // Starting exam
+
+        function startExam(eId, faculty){
+            var csr = $("input[name=csrfmiddlewaretoken").val();
+            mydata = {eId:eId, csrfmiddlewaretoken:csr, faculty:faculty};
+            // alert(eId);
+            $.ajax({
+                url: "{% url 'startExam' %}",
+                method: "POST",
+                data:mydata,
+                success: function(data){
+                    console.log(data);
+                    if (data.status == 1){
+                        alert("Exam Started Successfully");
+                    }else{
+                        window.alert("Error occurs try again later");
+                    }
+                }
+            });
+        }
+        // End Exam
+        function endExam(eId, faculty){
+            var csr = $("input[name=csrfmiddlewaretoken").val();
+            mydata = {eId:eId, csrfmiddlewaretoken:csr, faculty:faculty};
+            // alert(eId);
+            $.ajax({
+                url: "{% url 'endExam' %}",
+                method: "POST",
+                data:mydata,
+                success: function(data){
+                    console.log(data);
+                    if (data.status == 1){
+                        alert("Exam hasbeen Ended Successfully");
+                    }else{
+                        window.alert("Error occurs try again later");
+                    }
+                }
+            });
+        }
+
+        // # Viewing Details Of examinee
+        function viewDetails(eId, faculty){          
+            var csr = $("input[name=csrfmiddlewaretoken").val();
+            mydata = {eId:eId, csrfmiddlewaretoken:csr, faculty:faculty};
+            $.ajax({
+                url: "{% url 'viewExam' %}",
+                method: "POST",
+                data:mydata,
+                success: function(data){
+                    console.log(data);
+                    if (data.status == 1){
+                        window.location.href = "{% url 'examineeDetails' %}"
+                    }else{
+                        window.alert("Start Exam First");
+                    }
+                }
+            });
+        }
+
+        function scheduleExam(){
+            var csr = $("input[name=csrfmiddlewaretoken").val();
+            var examDetails=$("#examDetails").val();
+            var examFaculty = $("#examFacl").val();
+            // alert(examFaculty);
+            mydata={csrfmiddlewaretoken: csr,examDetails:examDetails,examFacl:examFaculty};
+           
+            $.ajax({
+                url: "{% url 'scheduleExam' %}",
+                method: "POST",
+                data: mydata,
+                dataType: "json",
+                success: function(data){
+                    // console.log(data);
+                    if (data.status == 1){
+                        console.log(data);
+                    }else{
+                    console.log(data);
+                    }
+                }
+            });
+        }
+
+        
+
+    </script>
+
+
+<!--    Linking Js Code-->
+    <script src="{% static 'bootstrap/js/jquery.js' %}"></script>
+    <script src="{% static 'bootstrap/js/popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+</html>
